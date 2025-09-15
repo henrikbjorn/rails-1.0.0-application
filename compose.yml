@@ -1,0 +1,28 @@
+services:
+  web:
+    tty: true
+    platform: linux/x86_64
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  
+  db:
+    image: mysql:5.5
+    restart: always
+    platform: linux/x86_64
+    environment:
+      MYSQL_DATABASE: 'app_development'   
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'      
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - './.mysql-data/db:/var/lib/mysql'
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
